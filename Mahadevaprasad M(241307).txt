@@ -1,0 +1,553 @@
+// Simple abap program 
+
+*&---------------------------------------------------------------------*
+*& Report ZPRASAD_STUDENT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPRASAD_STUDENT.
+types : BEGIN OF ty_zmakt01,
+        studid type zmakt01-studid,
+        studname type zmakt01-studname,
+        medals type zmakt01-medals,
+        sdep type zmakt01-sdep,
+  include TYPE zinclude,
+  END OF ty_zmakt01.
+
+  data st_zmakt01 type ty_zmakt01.
+  parameters p_sdep type zmakt01-sdep.
+
+  SELECT  studid studname medals sdep from zmakt01 into st_zmakt01 where sdep eq p_sdep.
+write :/ st_zmakt01-studid,
+        st_zmakt01-studname,
+        st_zmakt01-medals,
+st_zmakt01-sdep.
+  data  v_depart_desc type zmakt01-depart_desc.
+  SELECT single depart_desc from zmakt02 into v_depart_desc where sdep eq studid.
+    write v_depart_desc.
+------------------------------------------------------------------------------------------------------------------
+
+// First program in abap using differnt data types
+
+*&---------------------------------------------------------------------*
+*& Report ZPRASAD_FIRSTPROGRAM
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPRASAD_FIRSTPROGRAM.
+data a_name type c length 10.
+data qty type i.
+*qty = '10'.
+write 'integer value is'.
+write qty.
+PARAMETERS name type c length 10.
+write 'my name is'.
+write name.
+data date type d.
+date = '19980606'.
+write 'date of birth'.
+write date.
+data float type f.
+float = '10.78'.
+write float.
+data time type t.
+time = '091523'.
+write'time is'.
+write time.
+data hexa type x.
+write hexa.
+
+----------------------------------------------------------------------------------------------------------------
+
+// Abap program for internal tables
+
+*&---------------------------------------------------------------------*
+*& Report ZPLANTS_INTTABLE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPLANTS_INTTABLE.
+types  : BEGIN OF ty_marc,
+       matnr type marc-matnr,
+       werks type marc-werks,
+      END OF ty_marc.
+
+types : begin of ty_t001w,
+  name1 type t001w-name1,
+  werks type t001w-werks,
+  end of ty_t001w.
+
+      PARAMETERS p_matnr type marc-matnr.
+  DATA : it_marc type table of ty_marc,
+        wa_marc like line of it_marc,
+        it_t001w type table of ty_t001w,
+        wa_t001w like line of it_t001w.
+  data v_name1 TYPE t001w-name1.
+      select matnr werks from marc into TABLE it_marc where matnr eq p_matnr.
+        SELECT name1 werks from t001w into  table it_t001w for ALL ENTRIES IN it_marc where werks eq it_marc-werks.
+        LOOP AT it_marc INTO wa_marc.
+          READ TABLE it_t001w INTO wa_t001w with key werks = wa_marc-werks.
+
+
+
+
+    write :/ wa_marc-matnr,
+    wa_marc-werks,
+    wa_t001w-name1.
+    Endloop.
+------------------------------------------------------------------------------------------------------------------
+
+//Abap program to fetch plants names in company
+
+*&---------------------------------------------------------------------*
+*& Report ZPLANTS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPLANTS.
+data : BEGIN OF st_marc,
+       matnr type marc-matnr,
+       werks type marc-werks,
+      END OF st_marc.
+
+      PARAMETERS p_matnr type marc-matnr.
+      select matnr werks from marc into st_marc where matnr eq p_matnr.
+        write :/ st_marc-matnr,
+        st_marc-werks.
+
+        data  v_name1 type t001w-name1.
+  SELECT single name1 from t001w into v_name1  where werks eq st_marc-werks.
+    write :/ v_name1.
+    ENDSELECT.
+----------------------------------------------------------------------------------------------------------------
+
+// Abap program to get simple and compound interest.
+
+*&---------------------------------------------------------------------*
+*& Report ZPERCENTAGETASK
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPERCENTAGETASK.
+
+PARAMETERS: p_amt type p DECIMALS 2,
+            p_days  type i,
+            p_per  type p DECIMALS 2.
+
+
+DATA: Total_value TYPE p DECIMALS 2.
+
+SELECTION-SCREEN BEGIN OF BLOCK checkbox_block WITH FRAME.
+ parameters : p_check AS CHECKBOX.
+SELECTION-SCREEN END OF BLOCK checkbox_block.
+
+START-OF-SELECTION.
+IF p_check = 'X'.
+  p_per = p_amt * p_days.
+ELSE.
+  p_per = p_amt * ( EXP( p_per * p_days ) - 1 ).
+ENDIF.
+
+Total_value = p_amt + p_per.
+WRITE: / 'Initial amount:', p_amt,
+       / 'Days:', p_days,
+       / 'Total value:', Total_value.
+-----------------------------------------------------------------------------------------------------------------
+
+// Abap program to print sales order invoice using control statements.
+
+*&---------------------------------------------------------------------*
+*& Report ZINVOICE_CTRL
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZINVOICE_CTRL.
+TYPES: BEGIN OF ty_vbak,
+         vbeln TYPE vbak-vbeln,
+         audat TYPE vbak-audat,
+         netwr TYPE vbak-netwr,
+         kunnr TYPE vbak-kunnr,
+       END OF ty_vbak.
+
+TYPES: BEGIN OF ty_vbap,
+         vbeln  TYPE vbap-vbeln,
+         posnr  TYPE vbap-posnr,
+         pstyv  TYPE vbap-pstyv,
+         arktx  TYPE vbap-arktx,
+         kwmeng TYPE vbap-kwmeng,
+         zieme  TYPE vbap-zieme,
+         netwr  TYPE vbap-netwr,
+       END OF ty_vbap.
+
+TYPES: BEGIN OF ty_t006a,
+         msehi TYPE t006a-msehi,
+         msehl TYPE t006a-msehl,
+       END OF ty_t006a.
+
+TYPES: BEGIN OF ty_kna1,
+         kunnr TYPE kna1-kunnr,
+         name1 TYPE kna1-name1,
+       END OF ty_kna1.
+
+DATA: it_vbap TYPE TABLE OF ty_vbap,
+      wa_vbap LIKE LINE OF it_vbap,
+      it_vbak TYPE TABLE OF ty_vbak,
+      wa_vbak LIKE LINE OF it_vbak,
+      it_t006a TYPE TABLE OF ty_t006a,
+      wa_t006a LIKE LINE OF it_t006a,
+      it_kna1 TYPE TABLE OF ty_kna1,
+      wa_kna1 LIKE LINE OF it_kna1,
+      pvbeln  TYPE vbap-vbeln.
+
+
+
+SELECT-OPTIONS s_vbeln FOR wa_vbak-vbeln.
+
+SELECT  vbeln audat netwr kunnr FROM vbak INTO TABLE it_vbak WHERE vbeln IN s_vbeln.
+
+SELECT  kunnr name1 FROM kna1 INTO TABLE it_kna1 FOR ALL ENTRIES IN it_vbak WHERE kunnr EQ it_vbak-kunnr.
+
+SELECT  vbeln posnr pstyv arktx kwmeng zieme netwr FROM vbap INTO TABLE it_vbap WHERE vbeln IN s_vbeln.
+
+SELECT msehi msehl FROM t006a INTO TABLE it_t006a FOR ALL ENTRIES IN it_vbap WHERE spras EQ sy-langu AND msehi EQ it_vbap-zieme.
+*DATA lv_tabix LIKE sy-tabix.
+*DATA wa_vbap_temp LIKE wa_vbap.
+LOOP AT it_vbap INTO wa_vbap.
+*  wa_vbap_temp = wa_vbap.
+*  lv_tabix = sy-tabix.
+  READ TABLE it_vbak INTO wa_vbak WITH  KEY vbeln = wa_vbap-vbeln.
+  AT NEW vbeln.
+*    READ TABLE it_vbak INTO wa_vbak WITH  KEY vbeln = wa_vbap-vbeln.
+    READ TABLE it_kna1 INTO wa_kna1 WITH KEY kunnr = wa_vbak-kunnr.
+
+
+    WRITE : / 'Document Number:',wa_vbak-vbeln,
+            / 'Doc Date:',wa_vbak-audat,
+            / 'Net Val:',wa_vbak-netwr,
+            / 'Sold To Party:',wa_kna1-name1.
+*   WRITE : / wa_vbap_temp-posnr.
+
+    WRITE :/ 'Item',
+       20 'Material',
+       35 'ItemDesc',
+       60 'Order quantity' ,
+       80 'Unit of measure',
+       100'NetValue'.
+
+  ENDAT.
+
+  READ TABLE it_t006a INTO wa_t006a WITH KEY msehi = wa_vbap-zieme.
+
+  WRITE : / wa_vbap-posnr,
+
+           20 wa_vbap-pstyv,
+           35 wa_vbap-arktx,
+           50 wa_vbap-kwmeng,
+           80 wa_t006a-msehl,
+           90 wa_vbap-netwr.
+  AT END OF vbeln.
+    SUM.
+    WRITE : /50 wa_vbap-kwmeng, 90 wa_vbap-netwr.
+  ENDAT.
+SKIP.
+ENDLOOP.
+-----------------------------------------------------------------------------------------------------------------
+
+// Abap program to print invoice using selection range 
+
+*&---------------------------------------------------------------------*
+*& Report ZINVOICEINT_RANGE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zinvoiceint_range.
+
+TYPES : BEGIN OF ty_vbak,
+          vbeln TYPE vbak-vbeln,
+          audat TYPE vbak-audat,
+          netwr TYPE vbak-netwr,
+          kunnr TYPE vbak-kunnr,
+        END OF ty_vbak.
+
+TYPES : BEGIN OF ty_vbap,
+          posnr  TYPE vbap-posnr,
+          vbeln  TYPE vbap-vbeln,
+          matnr  TYPE vbap-matnr,
+          arktx  TYPE vbap-arktx,
+          kwmeng TYPE vbap-kwmeng,
+          zieme  TYPE vbap-zieme,
+          netwr  TYPE vbap-netwr,
+        END OF ty_vbap.
+
+TYPES : BEGIN OF ty_t006a,
+          msehi TYPE t006a-msehi,
+          msehl TYPE t006a-msehl,
+        END OF ty_t006a.
+TYPES : BEGIN OF ty_kna1,
+          kunnr TYPE kna1-kunnr,
+          name1 TYPE kna1-name1,
+        END OF ty_kna1.
+
+DATA : it_vbak  TYPE TABLE OF ty_vbak,
+       wa_vbak  LIKE LINE OF it_vbak,
+       it_vbap  TYPE TABLE OF ty_vbap,
+       wa_vbap  LIKE LINE OF it_vbap,
+       it_kna1  TYPE TABLE OF ty_kna1,
+       wa_kna1  LIKE LINE OF it_kna1,
+       it_t006a TYPE TABLE OF ty_t006a,
+       wa_t006a LIKE LINE OF it_t006a,
+       prevbeln TYPE vbap-vbeln.
+DATA v_name1 TYPE kna1-name1.
+DATA v_msehl TYPE t006a-msehl.
+data total type p .
+
+SELECT-OPTIONS s_vbeln FOR wa_vbak-vbeln.
+
+SELECT vbeln audat netwr kunnr FROM vbak INTO TABLE it_vbak WHERE vbeln IN s_vbeln.
+SELECT  SINGLE name1 FROM kna1 INTO  v_name1  WHERE kunnr EQ wa_vbak-kunnr.
+SELECT posnr vbeln matnr arktx kwmeng zieme netwr  FROM vbap INTO TABLE it_vbap WHERE vbeln IN s_vbeln.
+SELECT msehi msehl FROM t006a INTO TABLE it_t006a  FOR ALL ENTRIES IN it_vbap WHERE spras EQ sy-langu AND msehi EQ it_vbap-zieme.
+LOOP AT it_vbap INTO wa_vbap.
+  IF wa_vbap-vbeln NE prevbeln.
+
+
+    READ TABLE it_vbak INTO wa_vbak WITH KEY vbeln = wa_vbap-vbeln.
+    READ TABLE it_kna1 INTO wa_kna1 WITH KEY kunnr = wa_vbak-kunnr.
+    WRITE : / 'Document number:',wa_vbak-vbeln,
+          / 'Document date:' , wa_vbak-audat,
+          / 'Net Value:',wa_vbak-netwr,
+          / 'sold to value:' , wa_vbak-kunnr.
+SKIP.
+    WRITE : / 'Item',
+    20 'Material',
+    30 'Item description',
+    60 'order qty',
+    80 'UOM',
+    100 'Net value'.
+SKIP.
+  ENDIF.
+
+  READ TABLE it_t006a INTO wa_t006a WITH KEY msehi = wa_vbap-zieme.
+
+  WRITE :/ wa_vbap-posnr,
+20 wa_vbap-matnr,
+35 wa_vbap-arktx,
+50 wa_vbap-kwmeng,
+80 wa_t006a-msehl,
+90 wa_vbap-netwr.
+  prevbeln = wa_vbap-vbeln.
+  skip.
+  write total.
+ENDLOOP.
+------------------------------------------------------------------------------------------------------------------
+
+// Abap program to make normal invoice 
+
+*&---------------------------------------------------------------------*
+*& Report ZINVOICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZINVOICE.
+PARAMETERS p_doc type vbak-vbeln.
+
+types : BEGIN OF ty_vbak,
+    vbeln type vbak-vbeln,
+  audat type vbak-audat,
+  netwr type vbak-netwr,
+  kunnr type vbak-kunnr,
+  END OF ty_vbak.
+
+  TYPES : BEGIN OF ty_vbap,
+    posnr type vbap-posnr,
+    matnr type vbap-matnr,
+    arktx type vbap-arktx,
+    kwmeng type vbap-kwmeng,
+    zieme type vbap-zieme,
+    netwr  type vbap-netwr,
+    END OF ty_vbap.
+
+
+  data : st_vbak type ty_vbak.
+  data : st_vbap type ty_vbap.
+  data  v_name1 type kna1-name1.
+  data v_msehl type t006a-msehl.
+  select single vbeln audat netwr kunnr from vbak into st_vbak where vbeln eq p_doc.
+   select single name1 from kna1 into v_name1 where kunnr  eq st_vbak-kunnr.
+     select single msehl from t006a into v_msehl where spras eq 'sy-langu' and msehi eq st_vbap-zieme.
+    WRITE : / 'Document number',st_vbak-vbeln,
+    / 'Document date ', st_vbak-audat,
+    / 'Net Value',st_vbak-netwr,
+    / 'Sold to party',v_name1.
+
+      write :/ 'Item',
+             20 'Material',
+             35 ' Item Description',
+             60 'Order quantity',
+             80 ' unit of measurement',
+             100 'net values'.
+      select  posnr matnr arktx kwmeng zieme netwr from vbap into st_vbap where vbeln eq p_doc.
+      write :/ st_vbap-posnr,
+            20 st_vbap-matnr,
+            35 st_vbap-arktx,
+            60 st_vbap-kwmeng,
+            80 v_msehl,
+            100 st_vbap-netwr.
+    ENDSELECT.
+-----------------------------------------------------------------------------------------------------------------
+
+// Abap program to get internal tables 
+
+*&---------------------------------------------------------------------*
+*& Report ZINTTABLE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZINTTABLE.
+
+PARAMETERS p_doc type vbak-vbeln.
+
+types : BEGIN OF ty_vbak,
+    vbeln type vbak-vbeln,
+  audat type vbak-audat,
+  netwr type vbak-netwr,
+  kunnr type vbak-kunnr,
+  END OF ty_vbak.
+
+  TYPES : BEGIN OF ty_vbap,
+    posnr type vbap-posnr,
+    matnr type vbap-matnr,
+    arktx type vbap-arktx,
+    kwmeng type vbap-kwmeng,
+    zieme type vbap-zieme,
+    netwr  type vbap-netwr,
+    END OF ty_vbap.
+
+    types : begin of ty_t006a,
+      msehi TYPE t006a-msehi,
+      msehl type t006a-msehl,
+      END OF ty_t006a.
+
+
+
+  data : it_vbak type table of  ty_vbak,
+  wa_vbak  like line of it_vbak.
+  data : it_vbap type table of ty_vbap,
+        wa_vbap  like line of it_vbap.
+  data : it_t006a TYPE table of ty_t006a,
+        wa_t006a like line of it_t006a.
+  data  v_name1 type kna1-name1.
+  data v_msehl type t006a-msehl.
+
+  select  vbeln audat netwr kunnr from vbak into table it_vbak where vbeln eq p_doc.
+ select single name1 from kna1 into v_name1 where kunnr  eq wa_vbak-kunnr.
+
+*    WRITE : / 'Document number',
+*    / 'Document date ' ,
+*    / 'Net Value',
+*    / 'Sold to party'.
+*
+*      write :/ 'Item',
+*             20 'Material',
+*             35 ' Item Description',
+*             60 'Order quantity',
+*             80 ' unit of measurement',
+*             100 'net values'.
+
+*       wa_vbak-vbeln ='1'.
+*       wa_vbak-audat = '12022023'.
+*       wa_vbak-netwr = '23400'.
+*       wa_vbak-kunnr = 'electric'.
+       append wa_vbak to it_vbak.
+
+
+      select  posnr matnr arktx kwmeng zieme netwr from vbap into table it_vbap where vbeln eq p_doc.
+select  msehl msehi from t006a into table it_t006a for all ENTRIES IN it_vbap where spras eq sy-langu and msehi eq it_vbap-zieme.
+  loop at it_vbap INTO wa_vbap.
+    read table it_t006a into wa_t006a with key msehi = wa_vbap-zieme.
+*        write :/ st_vbap-posnr,
+*            20 st_vbap-matnr,
+*            35 st_vbap-arktx,
+*            60 st_vbap-kwmeng,
+*            80 v_msehl,
+*            100 st_vbap-netwr.
+        wa_vbap-posnr = '12'.
+        wa_vbap-matnr = '23'.
+        wa_vbap-arktx = 'mat'.
+        wa_vbap-kwmeng = '56'.
+        wa_vbap-zieme = 'kg'.
+        wa_vbap-netwr = '5000'.
+        append wa_vbap to it_vbap.
+
+*    read table it_vbak into wa_vbak index 1.
+    write : wa_vbak-vbeln,
+            wa_vbak-audat,
+            wa_vbak-netwr,
+            wa_vbak-kunnr.
+*    read table it_vbap into wa_vbap index 1.
+    write : wa_vbap-posnr,
+      wa_vbap-matnr,
+       wa_vbap-arktx,
+        wa_vbap-zieme,
+         wa_vbap-netwr.
+    ENDLOOP.
+-----------------------------------------------------------------------------------------------------------------
+
+// Abap program using differnt types of internal tables
+
+*&---------------------------------------------------------------------*
+*& Report ZINTERNAL_TYPES
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zinternal_types.
+TYPES : BEGIN OF ty_makt,
+          matnr TYPE makt-matnr,
+          spras TYPE makt-spras,
+          maktx TYPE makt-maktx,
+        END OF ty_makt.
+
+*DATA : it_makt type   TABLE OF ty_makt ,  // for standard table
+*       wa_makt LIKE LINE OF it_makt.
+DATA : it_makt type  sorted TABLE OF ty_makt with UNIQUE key matnr spras ,
+       wa_makt LIKE LINE OF it_makt.
+wa_makt-matnr = '100'.
+wa_makt-spras = 't'.
+wa_makt-maktx = '12'.
+INSERT wa_makt into  table it_makt.
+wa_makt-matnr = '200'.
+wa_makt-spras = 't'.
+wa_makt-maktx = '11'.
+insert wa_makt into table it_makt.
+*sort it_makt by matnr spras.
+*READ TABLE it_makt INTO wa_makt with key matnr = '200'  spras = ' two' binary SEARCH.
+READ TABLE it_makt into wa_makt with key matnr = '200' spras = 't'.
+------------------------------------------------------------------------------------------------------------------
+
+// abap program using control 
+*&---------------------------------------------------------------------*
+*& Report ZCTRL_PRACTICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zctrl_practice.
+
+TYPES : BEGIN OF ty_zmakt01,
+          studid     TYPE zmakt01-studid,
+          studname   TYPE  zmakt01-studname,
+          medals     TYPE zmakt01-medals,
+          studentfee TYPE zmakt01-studentfee,
+          sdep       TYPE zmakt01-sdep,
+        END OF ty_zmakt01.
+
+DATA : it_zmakt01 TYPE TABLE OF ty_zmakt01,
+       wa_zmakt01 LIKE LINE  OF it_zmakt01.
+
+wa_zmakt01-studid = '10'.
+wa_zmakt01-studname = 'prasad'.
+wa_zmakt01-medals = '4'.
+wa_zmakt01-studentfee = '23400'.
+wa_zmakt01-sdep = 'ME'.
+APPEND wa_zmakt01 to it_zmakt01.
+read table it_zmakt01 into wa_zmakt01 with key studid = '1' .
+-----------------------------------------------------------------------------------------------------------------
