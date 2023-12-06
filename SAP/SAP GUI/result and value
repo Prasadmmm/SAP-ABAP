@@ -1,0 +1,28 @@
+*&---------------------------------------------------------------------*
+*& Report ZSUB_RANDV
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZSUB_RANDV.
+DATA : v_matnr  TYPE makt-matnr,
+      v_maktx type makt-maktx,
+      v_spras TYPE makt-spras.
+v_matnr = '000000000000000056'.
+v_spras = 'd'.
+PERFORM zsub_vr using v_matnr v_spras CHANGING v_maktx.
+write : / v_maktx.
+
+*&---------------------------------------------------------------------*
+*& Form zsub_vr
+*&---------------------------------------------------------------------*
+*& text
+*&---------------------------------------------------------------------*
+*&      --> V_MATNR
+*&      --> V_SPRAS
+*&      <-- V_MAKTX
+*&---------------------------------------------------------------------*
+FORM zsub_vr  USING    value(p_v_matnr) TYPE makt-matnr
+                       value(p_v_spras) TYPE makt-spras
+              CHANGING value(p_v_maktx) TYPE makt-maktx.
+SELECT single maktx from makt into p_v_maktx WHERE matnr eq p_v_matnr AND spras eq p_v_spras.
+ENDFORM.

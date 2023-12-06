@@ -1,0 +1,51 @@
+*&---------------------------------------------------------------------*
+*& Report ZPLANT_COLORINT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPLANT_COLORINT.
+
+*TYPES : BEGIN OF ty_marc,
+*          matnr TYPE marc-matnr,
+*          werks TYPE marc-werks,
+*        END OF ty_marc.
+*
+*TYPES : BEGIN OF ty_t001w,
+*          name1 TYPE t001w-name1,
+*          werks TYPE t001w-werks,
+*        END OF ty_t001w.
+*
+*DATA : it_marc  TYPE TABLE OF ty_marc,
+*       wa_marc  LIKE LINE OF it_marc,
+*       it_t001w TYPE TABLE OF ty_t001w,
+*       wa_t001w LIKE LINE OF it_t001w.
+*
+*DATA  v_name1 TYPE t001w-name1.
+DATA : it_plant TYPE STANDARD TABLE OF ZKIR_VIEW1,
+      wa_plant LIKE LINE OF it_plant,
+ it_ck_plant TYPE STANDARD TABLE OF ZPP_PLANT,
+      wa_ck_plant LIKE LINE OF it_ck_plant.
+
+SELECT-OPTIONS s_matnr FOR wa_plant-matnr.
+
+
+*SELECT  matnr werks FROM marc INTO TABLE it_marc WHERE matnr EQ s_matnr.
+*SELECT  name1 werks FROM t001w INTO TABLE  it_t001w FOR ALL ENTRIES IN it_marc WHERE werks EQ it_marc-werks.
+SELECT * FROM ZKIR_VIEW1 INTO TABLE it_plant WHERE matnr IN s_matnr.
+SELECT * FROM ZPP_PLANT INTO TABLE IT_CK_PLANT.
+LOOP AT it_plant INTO wa_plant.
+*  READ TABLE it_t001w INTO wa_t001w WITH KEY werks = wa_marc-werks.
+
+* WRITE : / 'MATERIAL NUMBER',
+*     40 'PLANT NUMBER',
+*     80 'PLANT NAME'.
+
+
+IF SY-SUBRC IS INITIAL.
+    FORMAT COLOR COL_POSITIVE.
+    ENDIF.
+WRITE: / wa_plant-matnr,
+             40 wa_plant-werks,
+             80 wa_plant-name1.
+FORMAT COLOR OFF.
+ENDLOOP.

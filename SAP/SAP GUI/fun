@@ -1,0 +1,16 @@
+*&---------------------------------------------------------------------*
+*& Report ZFUC_PRACTICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZFUC_PRACTICE.
+DATA : st_makt TYPE makt.
+PARAMETERS : p_matnr TYPE makt-matnr.
+CALL FUNCTION 'ZF_MP'
+  EXPORTING
+    i_matnr       = p_matnr
+ IMPORTING
+   E_MAKT        = st_makt
+
+          .
+WRITE :  st_makt-matnr, st_makt-maktx,st_makt-spras.

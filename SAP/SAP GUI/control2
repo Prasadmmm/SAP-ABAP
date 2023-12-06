@@ -1,0 +1,24 @@
+*&---------------------------------------------------------------------*
+*& Report ZCTRL_PRACTICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zctrl_practice.
+
+TYPES : BEGIN OF ty_zmakt01,
+          studid     TYPE zmakt01-studid,
+          studname   TYPE  zmakt01-studname,
+          medals     TYPE zmakt01-medals,
+          studentfee TYPE zmakt01-studentfee,
+          sdep       TYPE zmakt01-sdep,
+        END OF ty_zmakt01.
+
+DATA : it_zmakt01 TYPE TABLE OF ty_zmakt01,
+       wa_zmakt01 LIKE LINE  OF it_zmakt01.
+wa_zmakt01-studid = '10'.
+wa_zmakt01-studname = 'prasad'.
+wa_zmakt01-medals = '4'.
+wa_zmakt01-studentfee = '23400'.
+wa_zmakt01-sdep = 'ME'.
+APPEND wa_zmakt01 to it_zmakt01.
+read table it_zmakt01 into wa_zmakt01 with key studid = '1' .

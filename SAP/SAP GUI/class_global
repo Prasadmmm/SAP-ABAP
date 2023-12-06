@@ -1,0 +1,19 @@
+*&---------------------------------------------------------------------*
+*& Report ZGLOBAL_MP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZGLOBAL_MP.
+data o_record type ref to zcl_supcls.
+ data result type i.
+
+START-OF-SELECTION.
+    CREATE OBJECT o_record.
+    o_record->count = 12.
+
+o_record->next_number(
+  IMPORTING
+    ex_count = result
+).
+
+write : result.

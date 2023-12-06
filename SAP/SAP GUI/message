@@ -1,0 +1,20 @@
+*&---------------------------------------------------------------------*
+*& Report ZMSG_CLASS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZMSG_CLASS message-id zmsg_cls.
+data : it_makt type STANDARD TABLE OF makt,
+      wa_makt LIKE LINE OF it_makt.
+
+PARAMETERS p_matnr type makt-matnr.
+at SELECTION-SCREEN.
+SELECT * from makt INTO TABLE it_makt where matnr  eq p_matnr.
+  IF sy-subrc IS NOT INITIAL.
+message e000(zmsg_cls) with p_matnr.
+  ENDIF.
+  START-OF-SELECTION.
+  LOOP at it_makt into wa_makt.
+    WRITE :
+    / wa_makt-matnr, wa_makt-spras, wa_makt-maktx.
+    ENDLOOP.

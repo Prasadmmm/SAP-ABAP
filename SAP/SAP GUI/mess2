@@ -1,0 +1,17 @@
+*&---------------------------------------------------------------------*
+*& Report ZPRASAD_MESSAGE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPRASAD_MESSAGE.
+data : it_makt type STANDARD TABLE OF makt,
+      wa_makt LIKE LINE OF it_makt.
+
+PARAMETERS p_matnr type makt-matnr.
+SELECT * from makt INTO TABLE it_makt where matnr  eq p_matnr.
+  IF sy-subrc IS NOT INITIAL.
+message E000(ZPRACTICE_MP) WITH p_matnr.
+  ENDIF.
+  LOOP at it_makt into wa_makt.
+    WRITE : / wa_makt-matnr, wa_makt-spras, wa_makt-maktx.
+    ENDLOOP.

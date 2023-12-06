@@ -1,0 +1,21 @@
+*&---------------------------------------------------------------------*
+*& Report ZFM_MATERIAL
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zfm_material.
+DATA p_vbeln TYPE vbak-vbeln.
+SELECT-OPTIONS x_vbeln FOR p_vbeln.
+
+START-OF-SELECTION.
+CALL FUNCTION 'ZMP_FM'
+  EXPORTING
+    i_vbeln  = x_vbeln[].
+
+CALL FUNCTION 'ZHEADERFM'.
+AT LINE-SELECTION.
+           CALL FUNCTION 'ZFM2'
+
+          .
+CALL FUNCTION 'ZITEMFM'
+          .

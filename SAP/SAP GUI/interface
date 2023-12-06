@@ -1,0 +1,12 @@
+*&---------------------------------------------------------------------*
+*& Report ZINTERFACE_MP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zinterface_mp.
+DATA : o_account TYPE REF TO zcl_account,
+       o_bus     TYPE REF TO zcl_bus,
+       o_truck   TYPE REF TO zcl_truck.
+CREATE OBJECT : o_account , o_bus , o_truck.
+o_account->caclculate_fuelcost( ovehicle = o_bus ).
+o_account->caclculate_fuelcost( ovehicle = o_truck ).

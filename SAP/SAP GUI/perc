@@ -1,0 +1,29 @@
+*&---------------------------------------------------------------------*
+*& Report ZPERCENTAGETASK
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPERCENTAGETASK.
+
+PARAMETERS: p_amt type p DECIMALS 2,
+            p_days  type i,
+            p_per  type p DECIMALS 2.
+
+
+DATA: Total_value TYPE p DECIMALS 2.
+
+SELECTION-SCREEN BEGIN OF BLOCK checkbox_block WITH FRAME.
+ parameters : p_check AS CHECKBOX.
+SELECTION-SCREEN END OF BLOCK checkbox_block.
+
+START-OF-SELECTION.
+IF p_check = 'X'.
+  p_per = p_amt * p_days.
+ELSE.
+  p_per = p_amt * ( EXP( p_per * p_days ) - 1 ).
+ENDIF.
+
+Total_value = p_amt + p_per.
+WRITE: / 'Initial amount:', p_amt,
+       / 'Days:', p_days,
+       / 'Total value:', Total_value.

@@ -1,0 +1,21 @@
+*&---------------------------------------------------------------------*
+*& Report ZMP_INTMP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZMP_INTMP.
+TYPES: BEGIN OF ty_makt,
+  mandt type makt-mandt,
+  matnr type makt-matnr,
+  spras type makt-spras,
+  END OF ty_makt.
+  data: it_makt TYPE table of ty_makt,
+        wa_makt like LINE OF it_makt.
+  SELECT mandt matnr spras from makt into TABLE it_makt.
+*   READ TABLE it_makt INTO wa_makt INDEX 2. //for index
+*    READ TABLE it_makt INTO wa_makt with key mandt = '100'. // for key
+    LOOP at it_makt into wa_makt from 1 to 5.
+    write :/ wa_makt-mandt ,
+    wa_makt-matnr,
+    wa_makt-spras.
+    ENDLOOP.

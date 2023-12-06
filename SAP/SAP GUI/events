@@ -1,0 +1,15 @@
+*&---------------------------------------------------------------------*
+*& Report ZEVENTS_MP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZEVENTS_MP.
+DATA o_emp type REF TO ZCL_MP_EVENTS.
+DATA o_event type REF TO zcl_events2.
+
+CREATE OBJECT o_emp.
+create OBJECT o_event.
+
+set HANDLER o_event->catch_double_click for o_emp.
+o_emp->double_click( ).
+write 'end'.

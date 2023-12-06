@@ -1,0 +1,28 @@
+*&---------------------------------------------------------------------*
+*& Report ZMP_OOPS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zmp_oops.
+CLASS lcl_count DEFINITION.
+  PUBLIC SECTION.
+    DATA counts TYPE i.
+    METHODS next EXPORTING number TYPE i.
+ENDCLASS.
+CLASS lcl_count IMPLEMENTATION.
+  METHOD next.
+    number = counts + 1.
+    counts = number.
+  ENDMETHOD.
+ENDCLASS.
+DATA v_doc TYPE i.
+DATA v_tag TYPE i.
+DATA o_doc TYPE REF TO lcl_count.
+
+START-OF-SELECTION.
+  CREATE OBJECT o_doc.
+
+  o_doc->next(
+    IMPORTING
+      number = v_doc
+  ).

@@ -1,0 +1,13 @@
+*&---------------------------------------------------------------------*
+*& Report ZBADI_MP1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZBADI_MP1.
+data o_bdi type REF TO zbadi2.
+PARAMETERS p_ctry TYPE c LENGTH 10.
+GET BADI o_bdi
+FILTERS
+zbadi_f2 = p_ctry.
+CALL BADI o_bdi->calculate_gst.
+write : 'end'.

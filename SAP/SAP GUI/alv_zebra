@@ -1,0 +1,135 @@
+*&---------------------------------------------------------------------*
+*& Report ZALV_ZEBRA
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZALV_ZEBRA.
+DATA : it_makt TYPE STANDARD TABLE OF makt.
+DATA : it_fcat TYPE SLIS_T_FIELDCAT_ALV.
+DATA v_matnr TYPE makt-matnr.
+SELECT-OPTIONS s_matnr FOR v_matnr.
+
+START-OF-SELECTION.
+PERFORM get_data.
+
+END-OF-SELECTION.
+PERFORM display_alv_output.
+*&---------------------------------------------------------------------*
+*& Form get_data
+*&---------------------------------------------------------------------*
+*& text
+*&---------------------------------------------------------------------*
+*& -->  p1        text
+*& <--  p2        text
+*&---------------------------------------------------------------------*
+FORM get_data .
+
+SELECT * FROM makt INTO TABLE it_makt WHERE matnr IN s_matnr.
+
+ENDFORM.
+*&---------------------------------------------------------------------*
+*& Form display_alv_output
+*&---------------------------------------------------------------------*
+*& text
+*&---------------------------------------------------------------------*
+*& -->  p1        text
+*& <--  p2        text
+*&---------------------------------------------------------------------*
+FORM display_alv_output .
+DATA lw_fcat LIKE LINE OF it_fcat.
+
+DATA : fs_layout TYPE slis_layout_alv.
+fs_layout-zebra = 'X'.
+
+lw_fcat-col_pos = 1.
+lw_fcat-fieldname = 'matnr'.
+lw_fcat-tabname = 'it_makt'.
+lw_fcat-seltext_m = 'Material number'.
+lw_fcat-outputlen = 20.
+APPEND lw_fcat TO it_fcat.
+
+lw_fcat-col_pos = 2.
+lw_fcat-fieldname = 'spras'.
+lw_fcat-tabname = 'it_makt'.
+lw_fcat-seltext_m = 'Language'.
+lw_fcat-outputlen = 20.
+APPEND lw_fcat TO it_fcat.
+
+lw_fcat-col_pos = 3.
+lw_fcat-fieldname = 'maktx'.
+lw_fcat-tabname = 'it_makt'.
+lw_fcat-seltext_m = 'Material Description'.
+lw_fcat-outputlen = 20.
+APPEND lw_fcat TO it_fcat.
+
+CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+ EXPORTING
+*   I_INTERFACE_CHECK              = ' '
+*   I_BYPASSING_BUFFER             =
+*   I_BUFFER_ACTIVE                = ' '
+   I_CALLBACK_PROGRAM             = 'ZALV_MENU '
+  I_CALLBACK_PF_STATUS_SET       = 'PF_STATUS '
+ I_CALLBACK_USER_COMMAND        = ' USER-COMMAND'
+*  I_STRUCTURE_NAME               = 'makt'
+  IS_LAYOUT                      = fs_layout
+  IT_FIELDCAT                    = it_fcat
+*   IT_EXCLUDING                   =
+*   IT_SPECIAL_GROUPS              =
+*   IT_SORT                        =
+*   IT_FILTER                      =
+*   IS_SEL_HIDE                    =
+*   I_DEFAULT                      = 'X'
+*   I_SAVE                         = ' '
+*   IS_VARIANT                     =
+*   IT_EVENTS                      =
+*   IT_EVENT_EXIT                  =
+*   IS_PRINT                       =
+*   IS_REPREP_ID                   =
+*   I_SCREEN_START_COLUMN          = 0
+*   I_SCREEN_START_LINE            = 0
+*   I_SCREEN_END_COLUMN            = 0
+*   I_SCREEN_END_LINE              = 0
+*   IR_SALV_LIST_ADAPTER           =
+*   IT_EXCEPT_QINFO                =
+*   I_SUPPRESS_EMPTY_DATA          = ABAP_FALSE
+*   IO_SALV_ADAPTER                =
+* IMPORTING
+*   E_EXIT_CAUSED_BY_CALLER        =
+*   ES_EXIT_CAUSED_BY_USER         =
+  TABLES
+    t_outtab                       = it_makt
+ EXCEPTIONS
+   PROGRAM_ERROR                  = 1
+   OTHERS                         = 2
+          .
+IF sy-subrc <> 0.
+
+
+
+ENDIF.
+
+ENDFORM.
+FORM user_command  USING r_ucomm LIKE sy-ucomm
+                         rs_selfield TYPE slis_selfield.
+*  IF r_ucomm EQ '&IC1'.
+*
+*  ENDIF.
+
+ENDFORM.
+
+FORM pf_status USING rt_extab TYPE slis_t_extab.
+SET PF-STATUS 'FULLSCREEN'.
+
+DATA rw_extab LIKE LINE OF rt_extab.
+  IF it_makt IS INITIAL.
+    clear rt_extab.
+    rw_extab-fcode = '&PDF'.
+    append rw_extab to rt_extab.
+
+
+  SET PF-STATUS 'FULLSCREEN' EXCLUDING rt_extab.
+  else.
+    SET PF-STATUS 'FULLSCREEN'.
+    ENDIF.
+
+    ENDFORM.

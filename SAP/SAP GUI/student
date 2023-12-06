@@ -1,0 +1,25 @@
+*&---------------------------------------------------------------------*
+*& Report ZPRASAD_STUDENT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPRASAD_STUDENT.
+types : BEGIN OF ty_zmakt01,
+        studid type zmakt01-studid,
+        studname type zmakt01-studname,
+        medals type zmakt01-medals,
+        sdep type zmakt01-sdep,
+  include TYPE zinclude,
+  END OF ty_zmakt01.
+
+  data st_zmakt01 type ty_zmakt01.
+  parameters p_sdep type zmakt01-sdep.
+
+  SELECT  studid studname medals sdep from zmakt01 into st_zmakt01 where sdep eq p_sdep.
+write :/ st_zmakt01-studid,
+        st_zmakt01-studname,
+        st_zmakt01-medals,
+st_zmakt01-sdep.
+  data  v_depart_desc type zmakt01-depart_desc.
+  SELECT single depart_desc from zmakt02 into v_depart_desc where sdep eq studid.
+    write v_depart_desc.

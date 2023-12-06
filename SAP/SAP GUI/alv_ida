@@ -1,0 +1,42 @@
+*&---------------------------------------------------------------------*
+*& Report ZALV_IDA_MP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZALV_IDA_MP.
+*cl_salv_gui_table_ida=>create_for_cds_view('Zsim_first')->fullscreen( )->display( ).
+CLASS mp DEFINITION.
+
+  PUBLIC SECTION.
+
+    CLASS-METHODS create
+      RETURNING
+        VALUE(result) TYPE REF TO mp.
+
+
+    METHODS run.
+
+ENDCLASS.
+
+class mp IMPLEMENTATION.
+METHOD create.
+    CREATE OBJECT result.
+
+  ENDMETHOD.
+  METHOD run.
+    cl_salv_gui_table_ida=>create_for_cds_view(`zsim_first`)->fullscreen( )->display( ).
+  ENDMETHOD.
+ENDCLASS.
+
+START-OF-SELECTION.
+
+  PERFORM get_display.
+
+END-OF-SELECTION.
+
+
+
+FORM get_display.
+  mp=>create( )->run( ).
+
+ENDFORM.

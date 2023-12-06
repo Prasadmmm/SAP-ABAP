@@ -1,0 +1,20 @@
+*&---------------------------------------------------------------------*
+*& Report ZPLANTS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zplants.
+DATA : BEGIN OF st_marc,
+         matnr TYPE marc-matnr,
+         werks TYPE marc-werks,
+       END OF st_marc.
+
+PARAMETERS p_matnr TYPE marc-matnr.
+SELECT matnr werks FROM marc INTO st_marc WHERE matnr EQ p_matnr.
+  WRITE :/ st_marc-matnr,
+  st_marc-werks.
+
+  DATA  v_name1 TYPE t001w-name1.
+  SELECT SINGLE name1 FROM t001w INTO v_name1  WHERE werks EQ st_marc-werks.
+  WRITE :/ v_name1.
+ENDSELECT.

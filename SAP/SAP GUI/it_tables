@@ -1,0 +1,20 @@
+*&---------------------------------------------------------------------*
+*& Report ZINTERNAL_PRACTICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZINTERNAL_PRACTICE.
+  TYPES : BEGIN OF ty_makt,
+    matnr type makt-matnr,
+    spras type makt-spras,
+    maktx TYPE makt-maktx,
+    end of ty_makt.
+
+    data : it_makt type table of ty_makt,
+          wa_makt like line of it_makt.
+    wa_makt-matnr = '200'.
+    wa_makt-spras = 'two'.
+    wa_makt-maktx = '12'.
+    append wa_makt to it_makt.
+    READ TABLE it_makt into wa_makt-matnr index 1.
+    write wa_makt.

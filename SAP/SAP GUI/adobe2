@@ -1,0 +1,61 @@
+*&---------------------------------------------------------------------*
+*& Report ZADOBE_SECOND
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZADOBE_SECOND.
+data it_makt type zdemo_tb_makt.
+data v_matnr type matnr.
+
+
+select-OPTIONS s_matnr for v_matnr.
+START-OF-SELECTION.
+SELECT matnr spras maktx from makt INTO TABLE it_makt where matnr in s_matnr.
+*SELECT vbeln audat netwr kunnr FROM vbak INTO TABLE it_vbak WHERE vbeln EQ v_matnr.
+
+  data v_fmname  type RS38L_FNAM.
+  DATA outputparams TYPE  SFPOUTPUTPARAMS.
+  CALL FUNCTION 'FP_JOB_OPEN'
+    CHANGING
+      ie_outputparams       = outputparams
+*   EXCEPTIONS
+*     CANCEL                = 1
+*     USAGE_ERROR           = 2
+*     SYSTEM_ERROR          = 3
+*     INTERNAL_ERROR        = 4
+*     OTHERS                = 5
+            .
+  IF sy-subrc <> 0.
+* Implement suitable error handling here
+  ENDIF.
+  CALL FUNCTION '/1BCDWB/SM00000161'
+    EXPORTING
+*     /1BCDWB/DOCPARAMS        =
+      it_makt                  = it_makt
+*   IMPORTING
+*     /1BCDWB/FORMOUTPUT       =
+*   EXCEPTIONS
+*     USAGE_ERROR              = 1
+*     SYSTEM_ERROR             = 2
+*     INTERNAL_ERROR           = 3
+*     OTHERS                   = 4
+            .
+  IF sy-subrc <> 0.
+* Implement suitable error handling here
+  ENDIF.
+
+
+
+
+  CALL FUNCTION 'FP_JOB_CLOSE'
+*   IMPORTING
+*     E_RESULT             =
+*   EXCEPTIONS
+*     USAGE_ERROR          = 1
+*     SYSTEM_ERROR         = 2
+*     INTERNAL_ERROR       = 3
+*     OTHERS               = 4
+            .
+  IF sy-subrc <> 0.
+* Implement suitable error handling here
+  ENDIF.

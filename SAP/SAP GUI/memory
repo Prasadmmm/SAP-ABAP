@@ -1,0 +1,14 @@
+*&---------------------------------------------------------------------*
+*& Report ZMEMORY_CALL
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zmemory_call.
+DATA v_date TYPE sy-datum.
+v_date = sy-datum.
+WRITE v_date.
+
+AT LINE-SELECTION.
+  EXPORT v_date TO MEMORY ID 'PAV'.
+  SUBMIT zsession AND RETURN.
+  WRITE 'end'.

@@ -1,0 +1,51 @@
+*&---------------------------------------------------------------------*
+*& Report ZINVOICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZINVOICE.
+PARAMETERS p_doc type vbak-vbeln.
+
+types : BEGIN OF ty_vbak,
+    vbeln type vbak-vbeln,
+  audat type vbak-audat,
+  netwr type vbak-netwr,
+  kunnr type vbak-kunnr,
+  END OF ty_vbak.
+
+  TYPES : BEGIN OF ty_vbap,
+    posnr type vbap-posnr,
+    matnr type vbap-matnr,
+    arktx type vbap-arktx,
+    kwmeng type vbap-kwmeng,
+    zieme type vbap-zieme,
+    netwr  type vbap-netwr,
+    END OF ty_vbap.
+
+
+  data : st_vbak type ty_vbak.
+  data : st_vbap type ty_vbap.
+  data  v_name1 type kna1-name1.
+  data v_msehl type t006a-msehl.
+  select single vbeln audat netwr kunnr from vbak into st_vbak where vbeln eq p_doc.
+   select single name1 from kna1 into v_name1 where kunnr  eq st_vbak-kunnr.
+     select single msehl from t006a into v_msehl where spras eq 'sy-langu' and msehi eq st_vbap-zieme.
+    WRITE : / 'Document number',st_vbak-vbeln,
+    / 'Document date ', st_vbak-audat,
+    / 'Net Value',st_vbak-netwr,
+    / 'Sold to party',v_name1.
+
+      write :/ 'Item',
+             20 'Material',
+             35 ' Item Description',
+             60 'Order quantity',
+             80 ' unit of measurement',
+             100 'net values'.
+      select  posnr matnr arktx kwmeng zieme netwr from vbap into st_vbap where vbeln eq p_doc.
+      write :/ st_vbap-posnr,
+            20 st_vbap-matnr,
+            35 st_vbap-arktx,
+            60 st_vbap-kwmeng,
+            80 v_msehl,
+            100 st_vbap-netwr.
+    ENDSELECT.

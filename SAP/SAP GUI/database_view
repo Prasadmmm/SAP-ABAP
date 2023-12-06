@@ -1,0 +1,13 @@
+*&---------------------------------------------------------------------*
+*& Report ZDATABASE_VIEW
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZDATABASE_VIEW.
+DATA : it_plant type table of zprasad_view,
+      wa_plant like line of it_plant.
+select-OPTIONS s_matnr for wa_plant-matnr.
+SELECT * from zprasad_view into table it_plant where matnr in s_matnr.
+  LOOP at it_plant into wa_plant.
+    write : / wa_plant-matnr , 50 wa_plant-werks , 100 wa_plant-name1.
+    endloop.

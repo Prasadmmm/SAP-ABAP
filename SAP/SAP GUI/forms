@@ -1,0 +1,41 @@
+*&---------------------------------------------------------------------*
+*& Report ZFORMS_M
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zforms_m.
+DATA it_vbak TYPE z_vbak.
+DATA it_vbap TYPE z_vbap.
+DATA v_vbeln TYPE vbeln.
+SELECT-OPTIONS s_vbeln FOR v_vbeln.
+
+START-OF-SELECTION.
+*SELECT posnr pstyv arktx from vbap into table it_vbap where vbeln in s_vbeln.
+*SELECT * FROM vbak INTO TABLE it_vbak WHERE  vbeln EQ v_vbeln.
+  SELECT posnr pstyv arktx FROM vbap INTO TABLE it_vbap FOR ALL ENTRIES IN it_vbak WHERE vbeln EQ it_vbak-vbeln.
+  CALL FUNCTION '/1BCDWB/SF00000093'
+    EXPORTING
+*     ARCHIVE_INDEX    =
+*     ARCHIVE_INDEX_TAB          =
+*     ARCHIVE_PARAMETERS         =
+*     CONTROL_PARAMETERS         =
+*     MAIL_APPL_OBJ    =
+*     MAIL_RECIPIENT   =
+*     MAIL_SENDER      =
+*     OUTPUT_OPTIONS   =
+*     USER_SETTINGS    = 'X'
+      it_vbak          = it_vbak
+      it_vbap          = it_vbap
+*   IMPORTING
+*     DOCUMENT_OUTPUT_INFO       =
+*     JOB_OUTPUT_INFO  =
+*     JOB_OUTPUT_OPTIONS         =
+    EXCEPTIONS
+      formatting_error = 1
+      internal_error   = 2
+      send_error       = 3
+      user_canceled    = 4
+      OTHERS           = 5.
+  IF sy-subrc <> 0.
+* Implement suitable error handling here
+  ENDIF.

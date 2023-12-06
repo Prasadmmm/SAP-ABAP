@@ -1,0 +1,30 @@
+*&---------------------------------------------------------------------*
+*& Report ZCOLLECT_INT
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZCOLLECT_INT.
+TYPES: BEGIN OF ty_shop,
+  item type c LENGTH 10,"item details
+  quantity type i,
+  amt TYPE p DECIMALS 2,
+  END OF ty_shop.
+  data: it_shop TYPE table of ty_shop,
+        wa_shop TYPE ty_shop.
+  wa_shop-item = 'soap'.
+  wa_shop-quantity = 1.
+  wa_shop-amt = 120.
+  COLLECT wa_shop into it_shop.
+  wa_shop-item = 'brush'.
+  wa_shop-quantity = 1.
+  wa_shop-amt = 12.
+  COLLECT wa_shop into it_shop.
+  wa_shop-item = 'soap'.
+  wa_shop-quantity = 1.
+  wa_shop-amt = 120.
+  COLLECT wa_shop into it_shop.
+  LOOP AT it_shop into wa_shop.
+WRITE :/ wa_shop-item,
+  wa_shop-quantity,
+  wa_shop-amt.
+  ENDLOOP.

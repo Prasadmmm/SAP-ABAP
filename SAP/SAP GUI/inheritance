@@ -1,0 +1,14 @@
+*&---------------------------------------------------------------------*
+*& Report ZINHERITANCE_MP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zinheritance_mp.
+DATA o_super TYPE REF TO zcl_super_mp.
+DATA o_sub TYPE REF TO zcl_sub_mp.
+
+CREATE OBJECT : o_super , o_sub.
+o_super->get_mileage( ).
+o_sub->get_mileage( ).
+o_sub->get_seats( ).
+WRITE 'end'.

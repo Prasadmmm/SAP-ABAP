@@ -1,0 +1,34 @@
+*&---------------------------------------------------------------------*
+*& Report ZPLANTS_INTTABLE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZPLANTS_INTTABLE.
+types  : BEGIN OF ty_marc,
+       matnr type marc-matnr,
+       werks type marc-werks,
+      END OF ty_marc.
+
+types : begin of ty_t001w,
+  name1 type t001w-name1,
+  werks type t001w-werks,
+  end of ty_t001w.
+
+      PARAMETERS p_matnr type marc-matnr.
+  DATA : it_marc type table of ty_marc,
+        wa_marc like line of it_marc,
+        it_t001w type table of ty_t001w,
+        wa_t001w like line of it_t001w.
+  data v_name1 TYPE t001w-name1.
+      select matnr werks from marc into TABLE it_marc where matnr eq p_matnr.
+        SELECT name1 werks from t001w into  table it_t001w for ALL ENTRIES IN it_marc where werks eq it_marc-werks.
+        LOOP AT it_marc INTO wa_marc.
+          READ TABLE it_t001w INTO wa_t001w with key werks = wa_marc-werks.
+
+
+
+
+    write :/ wa_marc-matnr,
+    wa_marc-werks,
+    wa_t001w-name1.
+    Endloop.

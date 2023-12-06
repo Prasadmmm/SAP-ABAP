@@ -1,0 +1,12 @@
+*&---------------------------------------------------------------------*
+*& Report ZMP_BADIP
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZMP_BADIP.
+DATA o_badi type REF TO zbadi_defin.
+PARAMETERS v_value TYPE i.
+GET BADI o_badi.
+call badi o_badi->cal_tax
+EXPORTING
+  v_val = v_value.

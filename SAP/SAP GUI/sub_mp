@@ -1,0 +1,27 @@
+*&---------------------------------------------------------------------*
+*& Report ZMP_SUBRO
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZMP_SUBRO.
+PARAMETERS p_snum TYPE c length 10.
+DATA : it_vbak TYPE  TABLE OF zsvbak,
+         wa_vbak LIKE LINE OF it_vbak,
+         it_kna1 TYPE STANDARD TABLE OF zskna1,
+         wa_kna1 LIKE LINE OF it_kna1.
+
+  DATA  wa_header LIKE LINE OF e_header.
+  DATA: it_vbap  TYPE STANDARD TABLE OF zsvbap,
+        wa_vbap  LIKE LINE OF it_vbap,
+        it_t006a TYPE STANDARD TABLE OF zst006a,
+        wa_t006a LIKE LINE OF it_t006a.
+  DATA wa_item LIKE LINE OF e_item.
+  DATA prevbeln TYPE vbap-vbeln.
+
+CALL FUNCTION 'ZMP_FM'
+  EXPORTING
+    i_vbeln        = s_num
+ IMPORTING
+   E_HEADER       = z_header
+   E_ITEM         = z_item
+*       SELECT-OPTIONS s_num FOR wa_header-vbeln.   .

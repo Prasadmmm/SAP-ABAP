@@ -1,0 +1,18 @@
+*&---------------------------------------------------------------------*
+*& Report ZMP_PLANTS_INT_PRACTICE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZMP_PLANTS_INT_PRACTICE.
+TYPES:BEGIN OF ty_marc,
+  matnr TYPE marc-matnr,
+  werks type marc-werks,
+  END OF ty_marc.
+  data : it_marc TYPE table of ty_marc,
+        wa_marc like LINE OF it_marc.
+  PARAMETERS p_werks TYPE marc-werks.
+  SELECT matnr werks from marc INTO TABLE it_marc where werks eq p_werks.
+    LOOP AT it_marc into wa_marc.
+WRITE :/ wa_marc-matnr,
+wa_marc-werks.
+    ENDLOOP.
